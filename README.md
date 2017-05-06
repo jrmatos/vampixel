@@ -1,5 +1,5 @@
-# Phaser Starter
+# Vampire Runner
 
-Just another boilerplate for developing games with Phaser.
+No description yet
 
 MIT Licensed
