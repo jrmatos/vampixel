@@ -9,9 +9,11 @@
     }   
     
     MenuState.prototype.create = function() {
-        this.game.stage.backgroundColor = '#697e96';
-        
-        this.game.add.button(400, 300, 'start', clicked, this);
+        var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 150, 'Vampixel', { fill: '#ffffff', align: 'center', fontSize: 80 });
+        text.anchor.set(0.5);
+
+        var button = this.game.add.button(this.game.world.centerX, this.game.world.centerY, 'start', clicked, this);
+        button.anchor.set(0.5);
 
         function clicked() {
             this.game.state.start('game');
