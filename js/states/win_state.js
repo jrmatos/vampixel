@@ -14,6 +14,6 @@
         }, 1500);
     }
 
-    gameController.addState('win', WinState);
+    gameManager.addState('win', WinState);
 
 })();

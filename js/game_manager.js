@@ -1,4 +1,4 @@
-var gameController = (function () {
+var gameManager = (function () {
     'use strict';
     
     var phaserGame = null,
@@ -24,10 +24,17 @@ var gameController = (function () {
         phaserGame.state.start(mainState);
     }
 
+    var utils = {
+        random: function (min, max) {
+            return Math.floor((Math.random() * max) + min);
+        }
+    }
+
     return {
         addState: addState,
         create: create,
-        start: start
+        start: start,
+        utils: utils
     }
     
 })();

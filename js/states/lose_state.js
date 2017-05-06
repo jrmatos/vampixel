@@ -14,6 +14,6 @@
         }, 1000);
     }
 
-    gameController.addState('lose', LoseState);
+    gameManager.addState('lose', LoseState);
 
 })();
