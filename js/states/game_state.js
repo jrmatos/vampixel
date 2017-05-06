@@ -7,7 +7,7 @@
         isJumping: false,
         isDoubleJumping: false,
         setup: function () {
-            player.sprite = this.game.add.sprite(100, 450, 'player');
+            player.sprite = this.game.add.sprite(100, this.game.height - 95, 'player');
             player.sprite.anchor.set(0.5);
             this.game.physics.arcade.enable(player.sprite);
             player.sprite.body.gravity.y = 750;
@@ -36,7 +36,7 @@
             }
         },
         bloodCollision: function (player, blood) {
-            // this.bloodSound.play();
+            this.bloodSound.play();
             blood.kill();
 
             // this.particleEmitter.x = blood.x;
@@ -49,17 +49,23 @@
     };
 
     GameState.prototype.preload = function() {
+        // player
         this.game.load.image('player', 'assets/img/player.png');
         this.game.load.image('platform', 'assets/img/wallHorizontal.png');
         this.game.load.image('particle', 'assets/img/pixel.png');
+
+        // blood
         this.game.load.audio('jumpSound', 'assets/audio/jump.ogg');
         this.game.load.image('blood', 'assets/img/blood.png');
-        // this.game.load.audio('bloodSound', 'assets/audio/blood.ogg');
+        this.game.load.audio('bloodSound', 'assets/audio/blood.ogg');
         
         // Parallax
         this.game.load.image('mountains-back', 'assets/img/mountains-back.png');
         this.game.load.image('mountains-mid1', 'assets/img/mountains-mid1.png');
         this.game.load.image('mountains-mid2', 'assets/img/mountains-mid2.png');
+
+        // ground
+        this.game.load.image('ground', 'assets/img/ground.png');
     }
 
     GameState.prototype.create = function() {
@@ -67,39 +73,55 @@
         this.game.stage.backgroundColor = '#697e96';
 
         /*------ Parallax ------*/
-        this.mountainsBack = this.game.add.tileSprite(0, 
+        this.mountainsBack = this.game.add.tileSprite(
+            0, 
             this.game.height - this.game.cache.getImage('mountains-back').height, 
             this.game.width, 
-            this.game.cache.getImage('mountains-back').height,'mountains-back'
+            this.game.cache.getImage('mountains-back').height,
+            'mountains-back'
         );
  
-        this.mountainsMid1 = this.game.add.tileSprite(0, 
+        this.mountainsMid1 = this.game.add.tileSprite(
+            0, 
             this.game.height - this.game.cache.getImage('mountains-mid1').height, 
             this.game.width, 
-            this.game.cache.getImage('mountains-mid1').height,'mountains-mid1'
+            this.game.cache.getImage('mountains-mid1').height,
+            'mountains-mid1'
         );
  
-        this.mountainsMid2 = this.game.add.tileSprite(0, 
+        this.mountainsMid2 = this.game.add.tileSprite(
+            0, 
             this.game.height - this.game.cache.getImage('mountains-mid2').height, 
             this.game.width, 
-            this.game.cache.getImage('mountains-mid2').height,'mountains-mid2'
+            this.game.cache.getImage('mountains-mid2').height,
+            'mountains-mid2'
+        );  
+
+        this.ground = this.game.add.tileSprite(
+            0, 
+            this.game.height - this.game.cache.getImage('ground').height, 
+            this.game.width, 
+            this.game.cache.getImage('ground').height,
+            'ground'
         );  
         
         // setup initial player properties
         player.setup.apply(this);
 
-        this.platform = this.game.add.sprite(0, this.game.world.height - 100, 'platform');
+        // transparent platform        
+        this.platform = this.game.add.sprite(0, this.game.world.height - 75, 'platform');
+        this.platform.alpha = 0;
         this.game.physics.arcade.enable(this.platform);
         this.platform.body.immovable = true;
         this.platform.width = this.game.world.width;
-        this.platform.height = 100;
+        this.platform.height = 75;
         this.jumpSound = this.game.add.audio('jumpSound');
-        // this.bloodSound = this.game.add.audio('bloodSound');
+        this.bloodSound = this.game.add.audio('bloodSound');
 
         // blood group
         this.bloods = this.game.add.group();
         this.bloods.enableBody = true;
-        this.bloods.create(200, 400, 'blood');
+        this.bloods.create(100, 400, 'blood');
         this.bloods.create(400, 400, 'blood');
         this.bloods.create(600, 400, 'blood');
         this.bloods.setAll('body.immovable', true);
@@ -117,6 +139,7 @@
         this.mountainsBack.tilePosition.x -= 0.05;
         this.mountainsMid1.tilePosition.x -= 0.3;
         this.mountainsMid2.tilePosition.x -= 0.75;
+        this.ground.tilePosition.x -= 3;
         
         handleColliders.apply(this);
         handleInputs.apply(this);
