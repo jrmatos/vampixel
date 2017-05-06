@@ -1,5 +1,7 @@
 (function () {
     'use strict'; 
+
+    var bloodsVelociy = 3;
     
     var player = {
         sprite: null,
@@ -46,12 +48,14 @@
     }
 
     var GameState = function() {
+      
     };
 
     GameState.prototype.preload = function() {
+          
         // player
         this.game.load.image('player', 'assets/img/player.png');
-        this.game.load.image('platform', 'assets/img/wallHorizontal.png');
+        this.game.load.image('wall', 'assets/img/wallHorizontal.png');
         this.game.load.image('particle', 'assets/img/pixel.png');
 
         // blood
@@ -109,7 +113,7 @@
         player.setup.apply(this);
 
         // transparent platform        
-        this.platform = this.game.add.sprite(0, this.game.world.height - 75, 'platform');
+        this.platform = this.game.add.sprite(0, this.game.world.height - 75, 'wall');
         this.platform.alpha = 0;
         this.game.physics.arcade.enable(this.platform);
         this.platform.body.immovable = true;
@@ -118,15 +122,19 @@
         this.jumpSound = this.game.add.audio('jumpSound');
         this.bloodSound = this.game.add.audio('bloodSound');
 
+        // wall left
+        this.wallLeft = this.game.add.sprite(-40, 0, 'wall');
+        this.game.physics.arcade.enable(this.wallLeft);
+        this.wallLeft.body.immovable = true;
+        this.wallLeft.width = 20;
+        this.wallLeft.height = this.game.world.height;
+
         // blood group
         this.bloods = this.game.add.group();
         this.bloods.enableBody = true;
-        this.bloods.create(100, 400, 'blood');
-        this.bloods.create(400, 400, 'blood');
-        this.bloods.create(600, 400, 'blood');
-        this.bloods.setAll('body.immovable', true);
-
-        // this.bloodCount = 3;
+        
+        createBloods.apply(this);
+        setInterval(createBloods.bind(this), 1000);
 
         // Emissor de particulas
         // this.particleEmitter = this.game.add.emitter(0, 0, 100);
@@ -135,12 +143,8 @@
     }
 
     GameState.prototype.update = function() {
-        // Parallax
-        this.mountainsBack.tilePosition.x -= 0.05;
-        this.mountainsMid1.tilePosition.x -= 0.3;
-        this.mountainsMid2.tilePosition.x -= 0.75;
-        this.ground.tilePosition.x -= 3;
-        
+        updateParallax.apply(this);
+        updateBloods.apply(this);        
         handleColliders.apply(this);
         handleInputs.apply(this);
     }    
@@ -149,17 +153,42 @@
         // this.game.debug.inputInfo(32, 32);
     }
 
+    /** ====================================================================
+     *                             Helpers
+     *  ==================================================================== */
     function handleColliders() {
         this.game.physics.arcade.collide(player.sprite, this.platform, player.groundCollision, null, this);
+        this.game.physics.arcade.collide(this.bloods, this.wallLeft, bloodOutsideCollision, null, this);
         this.game.physics.arcade.overlap(player.sprite, this.bloods, player.bloodCollision, null, this);
     }
 
+    function bloodOutsideCollision(wallLeft, blood) {
+        blood.kill();
+    }
+
     function handleInputs() {
-        
+        // mouse click or touch
         this.game.input.onDown.add(function () {
             player.jump.apply(this);
         }, this);
+    }
 
+    function updateParallax() {
+        this.mountainsBack.tilePosition.x -= 0.05;
+        this.mountainsMid1.tilePosition.x -= 0.3;
+        this.mountainsMid2.tilePosition.x -= 0.75;
+        this.ground.tilePosition.x -= 3;
+    }
+
+    function createBloods() {
+        this.bloods.create(810, this.game.rnd.integerInRange(300, 410), 'blood');
+        this.bloods.setAll('body.immovable', true);
+    }
+
+    function updateBloods() {
+        this.bloods.children.forEach(function (blood) {
+            blood.x -= bloodsVelociy || 5;
+        });
     }
 
     gameManager.addState('game', GameState);

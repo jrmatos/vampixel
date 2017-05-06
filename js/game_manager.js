@@ -25,9 +25,6 @@ var gameManager = (function () {
     }
 
     var utils = {
-        random: function (min, max) {
-            return Math.floor((Math.random() * max) + min);
-        }
     }
 
     return {
