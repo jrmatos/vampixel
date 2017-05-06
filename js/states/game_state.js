@@ -23,7 +23,7 @@
             }
 
             function doJump() {
-                this.jumpSound.play();
+                // this.jumpSound.play();
                 this.game.add.tween(player.sprite).to({ angle: 360 }, 750, Phaser.Easing.Exponential.Out).start();
                 player.sprite.body.velocity.y = player.jumpVelocity || -450;
             }
@@ -35,14 +35,14 @@
                 playerSprite.angle = 0;
             }
         },
-        // coinCollision: function (player, coin) {
-        //     this.coinSound.play();
-        //     coin.kill();
+        bloodCollision: function (player, blood) {
+            // this.bloodSound.play();
+            blood.kill();
 
-        //     this.particleEmitter.x = coin.x;
-        //     this.particleEmitter.y = coin.y;
-        //     this.particleEmitter.start(true, 500, null, 10);
-        // }
+            // this.particleEmitter.x = blood.x;
+            // this.particleEmitter.y = blood.y;
+            // this.particleEmitter.start(true, 500, null, 10);
+        }
     }
 
     var GameState = function() {
@@ -53,8 +53,8 @@
         this.game.load.image('platform', 'assets/img/wallHorizontal.png');
         this.game.load.image('particle', 'assets/img/pixel.png');
         this.game.load.audio('jumpSound', 'assets/audio/jump.ogg');
-        // this.game.load.image('coin', 'assets/img/coin.png');
-        // this.game.load.audio('coinSound', 'assets/audio/coin.ogg');
+        this.game.load.image('blood', 'assets/img/blood.png');
+        // this.game.load.audio('bloodSound', 'assets/audio/blood.ogg');
     }
 
     GameState.prototype.create = function() {
@@ -70,17 +70,17 @@
         this.platform.width = this.game.world.width;
         this.platform.height = 100;
         this.jumpSound = this.game.add.audio('jumpSound');
-        // this.coinSound = this.game.add.audio('coinSound');
+        // this.bloodSound = this.game.add.audio('bloodSound');
 
-        // coin group
-        // this.coins = this.game.add.group();
-        // this.coins.enableBody = true;
-        // this.coins.create(500, 200, 'coin');
-        // this.coins.create(180, 200, 'coin');
-        // this.coins.create(650, 300, 'coin');
-        // this.coins.setAll('body.immovable', true);
+        // blood group
+        this.bloods = this.game.add.group();
+        this.bloods.enableBody = true;
+        this.bloods.create(200, 400, 'blood');
+        this.bloods.create(400, 400, 'blood');
+        this.bloods.create(600, 400, 'blood');
+        this.bloods.setAll('body.immovable', true);
 
-        // this.coinCount = 3;
+        // this.bloodCount = 3;
 
         // Emissor de particulas
         // this.particleEmitter = this.game.add.emitter(0, 0, 100);
@@ -93,11 +93,12 @@
     }    
     
     GameState.prototype.render = function() {
+        // this.game.debug.inputInfo(32, 32);
     }
 
     function handleColliders() {
         this.game.physics.arcade.collide(player.sprite, this.platform, player.groundCollision, null, this);
-        // this.game.physics.arcade.overlap(player.sprite, this.coins, player.coinCollision, null, this);
+        this.game.physics.arcade.overlap(player.sprite, this.bloods, player.bloodCollision, null, this);
     }
 
     function handleInputs() {
