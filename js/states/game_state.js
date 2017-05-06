@@ -55,12 +55,35 @@
         this.game.load.audio('jumpSound', 'assets/audio/jump.ogg');
         // this.game.load.image('coin', 'assets/img/coin.png');
         // this.game.load.audio('coinSound', 'assets/audio/coin.ogg');
+        /*------ Parallax ------*/
+        this.game.load.image('mountains-back', 'assets/img/mountains-back.png');
+        this.game.load.image('mountains-mid1', 'assets/img/mountains-mid1.png');
+        this.game.load.image('mountains-mid2', 'assets/img/mountains-mid2.png');
     }
 
     GameState.prototype.create = function() {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.game.stage.backgroundColor = '#62a2c5';
+        this.game.stage.backgroundColor = '#697e96';
 
+        /*------ Parallax ------*/
+        this.mountainsBack = this.game.add.tileSprite(0, 
+            this.game.height - this.game.cache.getImage('mountains-back').height, 
+            this.game.width, 
+            this.game.cache.getImage('mountains-back').height,'mountains-back'
+        );
+ 
+        this.mountainsMid1 = this.game.add.tileSprite(0, 
+            this.game.height - this.game.cache.getImage('mountains-mid1').height, 
+            this.game.width, 
+            this.game.cache.getImage('mountains-mid1').height,'mountains-mid1'
+        );
+ 
+        this.mountainsMid2 = this.game.add.tileSprite(0, 
+            this.game.height - this.game.cache.getImage('mountains-mid2').height, 
+            this.game.width, 
+            this.game.cache.getImage('mountains-mid2').height,'mountains-mid2'
+        );  
+        
         // setup initial player properties
         player.setup.apply(this);
 
@@ -85,9 +108,17 @@
         // Emissor de particulas
         // this.particleEmitter = this.game.add.emitter(0, 0, 100);
         // this.particleEmitter.makeParticles('particle');
+        
+    
+        
     }
 
     GameState.prototype.update = function() {
+        /*------ Parallax ------*/
+        this.mountainsBack.tilePosition.x -= 0.05;
+        this.mountainsMid1.tilePosition.x -= 0.3;
+        this.mountainsMid2.tilePosition.x -= 0.75;
+        
         handleColliders.apply(this);
         handleInputs.apply(this);
     }    
