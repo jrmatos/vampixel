@@ -7,7 +7,7 @@
         isJumping: false,
         isDoubleJumping: false,
         setup: function () {
-            player.sprite = this.game.add.sprite(this.game.world.centerX, 450, 'player');
+            player.sprite = this.game.add.sprite(100, 450, 'player');
             player.sprite.anchor.set(0.5);
             this.game.physics.arcade.enable(player.sprite);
             player.sprite.body.gravity.y = 750;
@@ -55,7 +55,8 @@
         this.game.load.audio('jumpSound', 'assets/audio/jump.ogg');
         this.game.load.image('blood', 'assets/img/blood.png');
         // this.game.load.audio('bloodSound', 'assets/audio/blood.ogg');
-        /*------ Parallax ------*/
+        
+        // Parallax
         this.game.load.image('mountains-back', 'assets/img/mountains-back.png');
         this.game.load.image('mountains-mid1', 'assets/img/mountains-mid1.png');
         this.game.load.image('mountains-mid2', 'assets/img/mountains-mid2.png');
@@ -109,12 +110,10 @@
         // this.particleEmitter = this.game.add.emitter(0, 0, 100);
         // this.particleEmitter.makeParticles('particle');
         
-    
-        
     }
 
     GameState.prototype.update = function() {
-        /*------ Parallax ------*/
+        // Parallax
         this.mountainsBack.tilePosition.x -= 0.05;
         this.mountainsMid1.tilePosition.x -= 0.3;
         this.mountainsMid2.tilePosition.x -= 0.75;
@@ -134,19 +133,10 @@
 
     function handleInputs() {
         
-        this.game.input.keyboard.addKey(Phaser.Keyboard.W).onDown.add(function () {
+        this.game.input.onDown.add(function () {
             player.jump.apply(this);
         }, this);
 
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
-            player.sprite.body.velocity.x = -150;
-        }
-        else if (this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
-            player.sprite.body.velocity.x = 150;
-        }
-        else {
-             player.sprite.body.velocity.x = 0;
-        }
     }
 
     gameManager.addState('game', GameState);
