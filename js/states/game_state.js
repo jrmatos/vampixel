@@ -73,6 +73,7 @@
     }
 
     GameState.prototype.create = function() {
+        this.game.sound.stopAll();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#697e96';
 
