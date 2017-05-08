@@ -8,6 +8,7 @@
         jumpVelocity: -450,
         isJumping: false,
         isDoubleJumping: false,
+        isTripleJumping: false,
         setup: function () {
             player.sprite = this.game.add.sprite(100, this.game.height - 95, 'player');
             player.sprite.anchor.set(0.5);
@@ -17,11 +18,15 @@
         jump: function () {
             if(player.sprite.body.touching.down) {
                 player.isJumping = true;
-                doJump.apply(this);
+                return doJump.apply(this);
             }
             else if(!player.isDoubleJumping) {
                 player.isDoubleJumping = true;
-                doJump.apply(this);
+                return doJump.apply(this);
+            }
+            else if(!player.isTripleJumping) {
+                player.isTripleJumping = true;
+                return doJump.apply(this);
             }
 
             function doJump() {
@@ -34,7 +39,7 @@
             if(player.isJumping) {
                 player.isJumping = false;
                 player.isDoubleJumping = false;
-                playerSprite.angle = 0;
+                player.isTripleJumping = false;
             }
         },
         bloodCollision: function (player, blood) {
@@ -52,7 +57,6 @@
     };
 
     GameState.prototype.preload = function() {
-          
         // player
         this.game.load.image('player', 'assets/img/player.png');
         this.game.load.image('wall', 'assets/img/wallHorizontal.png');
@@ -77,7 +81,7 @@
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#697e96';
 
-        /*------ Parallax ------*/
+        // parallax
         this.mountainsBack = this.game.add.tileSprite(
             0, 
             this.game.height - this.game.cache.getImage('mountains-back').height, 
@@ -86,6 +90,7 @@
             'mountains-back'
         );
  
+        // parallax
         this.mountainsMid1 = this.game.add.tileSprite(
             0, 
             this.game.height - this.game.cache.getImage('mountains-mid1').height, 
@@ -94,6 +99,7 @@
             'mountains-mid1'
         );
  
+        // parallax
         this.mountainsMid2 = this.game.add.tileSprite(
             0, 
             this.game.height - this.game.cache.getImage('mountains-mid2').height, 
@@ -102,6 +108,7 @@
             'mountains-mid2'
         );  
 
+        // ground
         this.ground = this.game.add.tileSprite(
             0, 
             this.game.height - this.game.cache.getImage('ground').height, 
@@ -134,27 +141,27 @@
         this.bloods = this.game.add.group();
         this.bloods.enableBody = true;
         
-        createBloods.apply(this);
         setInterval(createBloods.bind(this), 1000);
 
         // Emissor de particulas
         // this.particleEmitter = this.game.add.emitter(0, 0, 100);
         // this.particleEmitter.makeParticles('particle');
+
+        handleInputs.apply(this);
         
     }
 
     GameState.prototype.update = function() {
-        updateParallax.apply(this);
+        updateParallaxes.apply(this);
         updateBloods.apply(this);        
         handleColliders.apply(this);
-        handleInputs.apply(this);
     }    
     
     GameState.prototype.render = function() {
         // this.game.debug.inputInfo(32, 32);
     }
 
-    /** ====================================================================
+    /*  ====================================================================
      *                             Helpers
      *  ==================================================================== */
     function handleColliders() {
@@ -174,7 +181,7 @@
         }, this);
     }
 
-    function updateParallax() {
+    function updateParallaxes() {
         this.mountainsBack.tilePosition.x -= 0.05;
         this.mountainsMid1.tilePosition.x -= 0.3;
         this.mountainsMid2.tilePosition.x -= 0.75;
