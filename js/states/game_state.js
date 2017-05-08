@@ -1,66 +1,20 @@
 (function () {
     'use strict'; 
 
+    var player = null;
     var bloodsVelociy = -200;
     var gameVelocity = 1;
-    
-    var player = {
-        sprite: null,
-        jumpVelocity: -450,
-        isJumping: false,
-        isDoubleJumping: false,
-        isTripleJumping: false,
-        setup: function () {
-            player.sprite = this.game.add.sprite(100, this.game.height - 95, 'player');
-            player.sprite.anchor.set(0.5);
-            this.game.physics.arcade.enable(player.sprite);
-            player.sprite.body.gravity.y = 750;
-        },
-        jump: function () {
-            if(player.sprite.body.touching.down) {
-                player.isJumping = true;
-                return doJump.apply(this);
-            }
-            else if(!player.isDoubleJumping) {
-                player.isDoubleJumping = true;
-                return doJump.apply(this);
-            }
-            else if(!player.isTripleJumping) {
-                player.isTripleJumping = true;
-                return doJump.apply(this);
-            }
-
-            function doJump() {
-                // this.jumpSound.play();
-                this.game.add.tween(player.sprite).to({ angle: 360 }, 750, Phaser.Easing.Exponential.Out).start();
-                player.sprite.body.velocity.y = player.jumpVelocity || -450;
-            }
-        },
-        groundCollision: function (playerSprite) {
-            if(player.isJumping) {
-                player.isJumping = false;
-                player.isDoubleJumping = false;
-                player.isTripleJumping = false;
-            }
-        },
-        bloodCollision: function (player, blood) {
-            this.bloodSound.play();
-            blood.kill();
-
-            // this.particleEmitter.x = blood.x;
-            // this.particleEmitter.y = blood.y;
-            // this.particleEmitter.start(true, 500, null, 10);
-        }
-    }
 
     var GameState = function() {
-    };
+        player = gameManager.getSprite('player')
+    }
 
     GameState.prototype.preload = function() {
         // player
-        this.game.load.image('player', 'assets/img/player.png');
+        player.preload();
+
+        // wall horizontal
         this.game.load.image('wall', 'assets/img/wallHorizontal.png');
-        this.game.load.image('particle', 'assets/img/pixel.png');
 
         // blood
         this.game.load.audio('jumpSound', 'assets/audio/jump.ogg');
@@ -117,9 +71,6 @@
             'ground'
         );  
         
-        // setup initial player properties
-        player.setup.apply(this);
-
         // transparent platform        
         this.platform = this.game.add.sprite(0, this.game.world.height - 75, 'wall');
         this.platform.alpha = 0;
@@ -129,6 +80,9 @@
         this.platform.height = 75;
         this.jumpSound = this.game.add.audio('jumpSound');
         this.bloodSound = this.game.add.audio('bloodSound');
+
+         // setup initial player properties
+        player.setup();
 
         // wall left
         this.wallLeft = this.game.add.sprite(-40, 0, 'wall');
@@ -145,10 +99,6 @@
 
         handleInputs.apply(this);
 
-        // Emissor de particulas
-        // this.particleEmitter = this.game.add.emitter(0, 0, 100);
-        // this.particleEmitter.makeParticles('particle');
-        
     }
 
     GameState.prototype.update = function() {
@@ -165,7 +115,7 @@
      *                             Helpers
      *  ==================================================================== */
     function handleColliders() {
-        this.game.physics.arcade.collide(player.sprite, this.platform, player.groundCollision, null, this);
+        this.game.physics.arcade.collide(player.sprite, this.platform, player.groundCollision, null, player);
         this.game.physics.arcade.collide(this.bloods, this.wallLeft, bloodOutsideCollision, null, this);
         this.game.physics.arcade.overlap(player.sprite, this.bloods, player.bloodCollision, null, this);
     }
@@ -177,7 +127,7 @@
     function handleInputs() {
         // mouse click or touch
         this.game.input.onDown.add(function () {
-            player.jump.apply(this);
+            player.jump();
         }, this);
     }
 
@@ -189,7 +139,7 @@
     }
 
     function createBloods() {
-        this.bloods.create(810, this.game.rnd.integerInRange(300, 410), 'blood');
+        this.bloods.create(810, this.game.rnd.integerInRange(135, 410), 'blood');
         this.bloods.setAll('body.immovable', true);
     }
 
