@@ -10,19 +10,21 @@
     var backgroundOne = null;
     var backgroundTwo = null;
     var backgroundThree = null;
+    var backgroundFour = null;
     var ground = null;
     var transparentGround = null;
     var wallLeft = null;
 
     var GameState = function() {
         // load sprites here
-        player = gameManager.getSprite('player');
-        backgroundOne = gameManager.getSprite('backgroundOne');
-        backgroundTwo = gameManager.getSprite('backgroundTwo');
-        backgroundThree = gameManager.getSprite('backgroundThree');
-        ground = gameManager.getSprite('ground');
-        transparentGround = gameManager.getSprite('transparentGround');
-        wallLeft = gameManager.getSprite('wallLeft');
+        player              = gameManager.getSprite('player');
+        backgroundOne       = gameManager.getSprite('backgroundOne');
+        backgroundTwo       = gameManager.getSprite('backgroundTwo');
+        backgroundThree     = gameManager.getSprite('backgroundThree');
+        backgroundFour      = gameManager.getSprite('backgroundFour');
+        ground              = gameManager.getSprite('ground');
+        transparentGround   = gameManager.getSprite('transparentGround');
+        wallLeft            = gameManager.getSprite('wallLeft');
     }
 
     GameState.prototype.preload = function() {
@@ -33,6 +35,7 @@
         backgroundOne.preload();
         backgroundTwo.preload();
         backgroundThree.preload();
+        backgroundFour.preload();
         ground.preload();
 
         // wall horizontal
@@ -53,12 +56,13 @@
 
         // activate physics system
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.game.stage.backgroundColor = '#697e96';
+        this.game.stage.backgroundColor = '#53078e';
 
         // parallax
-        backgroundOne.setup();
-        backgroundTwo.setup();
+        backgroundFour.setup();
         backgroundThree.setup();
+        backgroundTwo.setup();
+        backgroundOne.setup();
 
         // ground sprite
         ground.setup();
@@ -82,8 +86,7 @@
         this.game.time.events.loop(Phaser.Timer.SECOND, createBloods, this);
         
         // handle all inputs
-        handleInputs.apply(this);
-
+        handleInputs.apply(this);        
     }
 
     GameState.prototype.update = function() {
@@ -113,14 +116,15 @@
     }
 
     function updateParallaxes() {
-        backgroundOne.sprite.tilePosition.x -= 0.05;
-        backgroundTwo.sprite.tilePosition.x -= 0.3;
-        backgroundThree.sprite.tilePosition.x -= 0.75;
+        backgroundOne.sprite.tilePosition.x -= 0.85;
+        backgroundTwo.sprite.tilePosition.x -= 0.60;
+        backgroundThree.sprite.tilePosition.x -= 0.10;
+        backgroundFour.sprite.tilePosition.x -= 0.05;
         ground.sprite.tilePosition.x -= 3;
     }
 
     function createBloods() {
-        this.bloods.create(810, this.game.rnd.integerInRange(135, 410), 'blood');
+        this.bloods.create(this.game.world.width + 10, this.game.rnd.integerInRange(135, 410), 'blood');
         this.bloods.setAll('body.immovable', true);
     }
 

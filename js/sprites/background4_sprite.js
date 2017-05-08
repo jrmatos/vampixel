@@ -1,17 +1,17 @@
 (function () {
     'use strict';
 
-    var BackgroundOne = function () {
+    var BackgroundFour = function () {
         this.sprite = null; 
-        this.imageName = 'backgroundone_image';
-        this.imageUrl = 'assets/img/bg1.png';
+        this.imageName = 'backgroundfour_image';
+        this.imageUrl = 'assets/img/bg4.png';
     }
 
-    BackgroundOne.prototype.preload = function () {
+    BackgroundFour.prototype.preload = function () {
         this.game.load.image(this.imageName, this.imageUrl);
     }
 
-    BackgroundOne.prototype.setup = function () {
+    BackgroundFour.prototype.setup = function () {
         this.sprite = this.game.add.tileSprite(
             0, 
             this.game.height - this.game.cache.getImage(this.imageName).height, 
@@ -19,8 +19,9 @@
             this.game.cache.getImage(this.imageName).height,
             this.imageName
         );
+        this.sprite.tilePosition.x -= 200;
     }
 
-    gameManager.addSprite('backgroundOne', BackgroundOne);
+    gameManager.addSprite('backgroundFour', BackgroundFour);
 
 })();

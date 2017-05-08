@@ -4,7 +4,7 @@
     var backgroundTwo = function () {
         this.sprite = null;
         this.imageName = 'backgroundtwo_image';
-        this.imageUrl = 'assets/img/mountains-mid1.png';
+        this.imageUrl = 'assets/img/bg2.png';
     }
 
     backgroundTwo.prototype.preload = function () {

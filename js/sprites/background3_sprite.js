@@ -4,7 +4,7 @@
     var BackgroundThree = function () {
         this.sprite = null; 
         this.imageName = 'backgroundthree_image';
-        this.imageUrl = 'assets/img/mountains-mid2.png';
+        this.imageUrl = 'assets/img/bg3.png';
     }
 
     BackgroundThree.prototype.preload = function () {
