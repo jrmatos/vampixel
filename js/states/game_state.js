@@ -1,7 +1,8 @@
 (function () {
     'use strict'; 
 
-    var bloodsVelociy = 3;
+    var bloodsVelociy = -200;
+    var gameVelocity = 1;
     
     var player = {
         sprite: null,
@@ -53,7 +54,6 @@
     }
 
     var GameState = function() {
-      
     };
 
     GameState.prototype.preload = function() {
@@ -141,13 +141,13 @@
         this.bloods = this.game.add.group();
         this.bloods.enableBody = true;
         
-        setInterval(createBloods.bind(this), 1000);
+        this.game.time.events.loop(Phaser.Timer.SECOND, createBloods, this);
+
+        handleInputs.apply(this);
 
         // Emissor de particulas
         // this.particleEmitter = this.game.add.emitter(0, 0, 100);
         // this.particleEmitter.makeParticles('particle');
-
-        handleInputs.apply(this);
         
     }
 
@@ -195,7 +195,7 @@
 
     function updateBloods() {
         this.bloods.children.forEach(function (blood) {
-            blood.x -= bloodsVelociy || 5;
+            blood.body.velocity.x = bloodsVelociy;
         });
     }
 
