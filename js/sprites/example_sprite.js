@@ -7,7 +7,7 @@
 
     /**
      * @type Required
-     * @param you can't use it as a sprite constructor. Instead, use the `setup` method
+     * @description you can't use it as a sprite constructor. Instead, use the `setup` method
      */
     var Example = function () {
         // required
