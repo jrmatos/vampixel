@@ -1,5 +1,4 @@
-# Vampire Runner
-
+# VamPixel
 No description yet
 
 MIT Licensed
