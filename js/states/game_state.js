@@ -5,38 +5,28 @@
     var bloodsVelociy = -200;
     var gameVelocity = 1;
 
-    // sprites
-    var player              = null;
-    var backgroundOne       = null;
-    var backgroundTwo       = null;
-    var backgroundThree     = null;
-    var backgroundFour      = null;
-    var ground              = null;
-    var transparentGround   = null;
-    var wallLeft            = null;
-
     var GameState = function() {
         // load sprites here
-        player              = gameManager.getSprite('player');
-        backgroundOne       = gameManager.getSprite('backgroundOne');
-        backgroundTwo       = gameManager.getSprite('backgroundTwo');
-        backgroundThree     = gameManager.getSprite('backgroundThree');
-        backgroundFour      = gameManager.getSprite('backgroundFour');
-        ground              = gameManager.getSprite('ground');
-        transparentGround   = gameManager.getSprite('transparentGround');
-        wallLeft            = gameManager.getSprite('wallLeft');
+        this.player              = gameManager.getSprite('player');
+        this.backgroundOne       = gameManager.getSprite('backgroundOne');
+        this.backgroundTwo       = gameManager.getSprite('backgroundTwo');
+        this.backgroundThree     = gameManager.getSprite('backgroundThree');
+        this.backgroundFour      = gameManager.getSprite('backgroundFour');
+        this.ground              = gameManager.getSprite('ground');
+        this.transparentGround   = gameManager.getSprite('transparentGround');
+        this.wallLeft            = gameManager.getSprite('wallLeft');
     }
 
     GameState.prototype.preload = function() {
         // player
-        player.preload();
+        this.player.preload();
 
         // parallax
-        backgroundOne.preload();
-        backgroundTwo.preload();
-        backgroundThree.preload();
-        backgroundFour.preload();
-        ground.preload();
+        this.backgroundOne.preload();
+        this.backgroundTwo.preload();
+        this.backgroundThree.preload();
+        this.backgroundFour.preload();
+        this.ground.preload();
 
         // wall horizontal
         this.game.load.image('wall', 'assets/img/wallHorizontal.png');
@@ -59,24 +49,24 @@
         this.game.stage.backgroundColor = '#53078e';
 
         // parallax
-        backgroundFour.setup();
-        backgroundThree.setup();
-        backgroundTwo.setup();
-        backgroundOne.setup();
+        this.backgroundFour.setup();
+        this.backgroundThree.setup();
+        this.backgroundTwo.setup();
+        this.backgroundOne.setup();
 
         // ground sprite
-        ground.setup();
+        this.ground.setup();
 
         // transparent ground platform
         // this one is where the player collides     
-        transparentGround.setup('wall');        
+        this.transparentGround.setup('wall');        
         
         // wall left
         // use this to kill objects outside the screen
-        wallLeft.setup('wall');
+        this.wallLeft.setup('wall');
 
         // setup initial player properties
-        player.setup();
+        this.player.setup();
 
         // blood group
         this.bloods = this.game.add.group();
@@ -101,9 +91,9 @@
 
     // collision checkers
     function handleColliders() {
-        this.game.physics.arcade.collide(player.sprite, transparentGround.sprite, player.groundCollision, null, player);
-        this.game.physics.arcade.collide(this.bloods, wallLeft.sprite, bloodOutsideCollision, null, this);
-        this.game.physics.arcade.overlap(player.sprite, this.bloods, player.bloodCollision, null, this);
+        this.game.physics.arcade.collide(this.player.sprite, this.transparentGround.sprite, this.player.groundCollision, null, this.player);
+        this.game.physics.arcade.collide(this.bloods, this.wallLeft.sprite, bloodOutsideCollision, null, this);
+        this.game.physics.arcade.overlap(this.player.sprite, this.bloods, this.player.bloodCollision, null, this);
     }
 
     // check this
@@ -112,15 +102,15 @@
     }
 
     function handleInputs() {
-        this.game.input.onDown.add(player.jump, player); // mouse click or touch
+        this.game.input.onDown.add(this.player.jump, this.player); // mouse click or touch
     }
 
     function updateParallaxes() {
-        backgroundOne.sprite.tilePosition.x -= 0.85;
-        backgroundTwo.sprite.tilePosition.x -= 0.60;
-        backgroundThree.sprite.tilePosition.x -= 0.10;
-        backgroundFour.sprite.tilePosition.x -= 0.05;
-        ground.sprite.tilePosition.x -= 3;
+        this.backgroundOne.sprite.tilePosition.x -= 0.85;
+        this.backgroundTwo.sprite.tilePosition.x -= 0.60;
+        this.backgroundThree.sprite.tilePosition.x -= 0.10;
+        this.backgroundFour.sprite.tilePosition.x -= 0.05;
+        this.ground.sprite.tilePosition.x -= 3;
     }
 
     function createBloods() {
