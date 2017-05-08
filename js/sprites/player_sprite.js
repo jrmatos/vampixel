@@ -11,7 +11,7 @@
         this.isDoubleJumping = false;
         this.isTripleJumping = false;
         this.initialPositionX = 100;
-        this.initialPositionY = this.game.height - 95;
+        this.initialPositionY = this.game.height - 45;
     }
 
     Player.prototype.preload = function () {
