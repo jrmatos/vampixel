@@ -1,3 +1,4 @@
+/* @author Paulo Matos */
 var gameManager = (function () {
     'use strict';
     
