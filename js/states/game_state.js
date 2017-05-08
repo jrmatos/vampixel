@@ -1,17 +1,39 @@
 (function () {
     'use strict'; 
 
-    var player = null;
+    // globals
     var bloodsVelociy = -200;
     var gameVelocity = 1;
 
+    // sprites
+    var player = null;
+    var backgroundOne = null;
+    var backgroundTwo = null;
+    var backgroundThree = null;
+    var ground = null;
+    var transparentGround = null;
+    var wallLeft = null;
+
     var GameState = function() {
-        player = gameManager.getSprite('player')
+        // load sprites here
+        player = gameManager.getSprite('player');
+        backgroundOne = gameManager.getSprite('backgroundOne');
+        backgroundTwo = gameManager.getSprite('backgroundTwo');
+        backgroundThree = gameManager.getSprite('backgroundThree');
+        ground = gameManager.getSprite('ground');
+        transparentGround = gameManager.getSprite('transparentGround');
+        wallLeft = gameManager.getSprite('wallLeft');
     }
 
     GameState.prototype.preload = function() {
         // player
         player.preload();
+
+        // parallax
+        backgroundOne.preload();
+        backgroundTwo.preload();
+        backgroundThree.preload();
+        ground.preload();
 
         // wall horizontal
         this.game.load.image('wall', 'assets/img/wallHorizontal.png');
@@ -20,83 +42,46 @@
         this.game.load.audio('jumpSound', 'assets/audio/jump.ogg');
         this.game.load.image('blood', 'assets/img/blood.png');
         this.game.load.audio('bloodSound', 'assets/audio/blood.ogg');
-        
-        // Parallax
-        this.game.load.image('mountains-back', 'assets/img/mountains-back.png');
-        this.game.load.image('mountains-mid1', 'assets/img/mountains-mid1.png');
-        this.game.load.image('mountains-mid2', 'assets/img/mountains-mid2.png');
-
-        // ground
-        this.game.load.image('ground', 'assets/img/ground.png');
     }
 
     GameState.prototype.create = function() {
+
+        // sound
         this.game.sound.stopAll();
+        this.jumpSound = this.game.add.audio('jumpSound');
+        this.bloodSound = this.game.add.audio('bloodSound');
+
+        // activate physics system
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#697e96';
 
         // parallax
-        this.mountainsBack = this.game.add.tileSprite(
-            0, 
-            this.game.height - this.game.cache.getImage('mountains-back').height, 
-            this.game.width, 
-            this.game.cache.getImage('mountains-back').height,
-            'mountains-back'
-        );
- 
-        // parallax
-        this.mountainsMid1 = this.game.add.tileSprite(
-            0, 
-            this.game.height - this.game.cache.getImage('mountains-mid1').height, 
-            this.game.width, 
-            this.game.cache.getImage('mountains-mid1').height,
-            'mountains-mid1'
-        );
- 
-        // parallax
-        this.mountainsMid2 = this.game.add.tileSprite(
-            0, 
-            this.game.height - this.game.cache.getImage('mountains-mid2').height, 
-            this.game.width, 
-            this.game.cache.getImage('mountains-mid2').height,
-            'mountains-mid2'
-        );  
+        backgroundOne.setup();
+        backgroundTwo.setup();
+        backgroundThree.setup();
 
-        // ground
-        this.ground = this.game.add.tileSprite(
-            0, 
-            this.game.height - this.game.cache.getImage('ground').height, 
-            this.game.width, 
-            this.game.cache.getImage('ground').height,
-            'ground'
-        );  
+        // ground sprite
+        ground.setup();
+
+        // transparent ground platform
+        // this one is where the player collides     
+        transparentGround.setup('wall');        
         
-        // transparent platform        
-        this.platform = this.game.add.sprite(0, this.game.world.height - 75, 'wall');
-        this.platform.alpha = 0;
-        this.game.physics.arcade.enable(this.platform);
-        this.platform.body.immovable = true;
-        this.platform.width = this.game.world.width;
-        this.platform.height = 75;
-        this.jumpSound = this.game.add.audio('jumpSound');
-        this.bloodSound = this.game.add.audio('bloodSound');
-
-         // setup initial player properties
-        player.setup();
-
         // wall left
-        this.wallLeft = this.game.add.sprite(-40, 0, 'wall');
-        this.game.physics.arcade.enable(this.wallLeft);
-        this.wallLeft.body.immovable = true;
-        this.wallLeft.width = 20;
-        this.wallLeft.height = this.game.world.height;
+        // use this to kill objects outside the screen
+        wallLeft.setup('wall');
+
+        // setup initial player properties
+        player.setup();
 
         // blood group
         this.bloods = this.game.add.group();
         this.bloods.enableBody = true;
         
+        // generate blood every second
         this.game.time.events.loop(Phaser.Timer.SECOND, createBloods, this);
-
+        
+        // handle all inputs
         handleInputs.apply(this);
 
     }
@@ -111,31 +96,27 @@
         // this.game.debug.inputInfo(32, 32);
     }
 
-    /*  ====================================================================
-     *                             Helpers
-     *  ==================================================================== */
+    // collision checkers
     function handleColliders() {
-        this.game.physics.arcade.collide(player.sprite, this.platform, player.groundCollision, null, player);
-        this.game.physics.arcade.collide(this.bloods, this.wallLeft, bloodOutsideCollision, null, this);
+        this.game.physics.arcade.collide(player.sprite, transparentGround.sprite, player.groundCollision, null, player);
+        this.game.physics.arcade.collide(this.bloods, wallLeft.sprite, bloodOutsideCollision, null, this);
         this.game.physics.arcade.overlap(player.sprite, this.bloods, player.bloodCollision, null, this);
     }
 
+    // check this
     function bloodOutsideCollision(wallLeft, blood) {
         blood.kill();
     }
 
     function handleInputs() {
-        // mouse click or touch
-        this.game.input.onDown.add(function () {
-            player.jump();
-        }, this);
+        this.game.input.onDown.add(player.jump, player); // mouse click or touch
     }
 
     function updateParallaxes() {
-        this.mountainsBack.tilePosition.x -= 0.05;
-        this.mountainsMid1.tilePosition.x -= 0.3;
-        this.mountainsMid2.tilePosition.x -= 0.75;
-        this.ground.tilePosition.x -= 3;
+        backgroundOne.sprite.tilePosition.x -= 0.05;
+        backgroundTwo.sprite.tilePosition.x -= 0.3;
+        backgroundThree.sprite.tilePosition.x -= 0.75;
+        ground.sprite.tilePosition.x -= 3;
     }
 
     function createBloods() {

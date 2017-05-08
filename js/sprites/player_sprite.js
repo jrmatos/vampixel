@@ -5,6 +5,7 @@
         this.imageName = 'player_image';
         this.imageUrl = 'assets/img/player.png';
         this.sprite = null;
+        this.gravity = 750;
         this.jumpVelocity = -450;
         this.isJumping = false;
         this.isDoubleJumping = false;
@@ -21,7 +22,7 @@
         this.sprite = this.game.add.sprite(this.initialPositionX, this.initialPositionY, this.imageName);   
         this.sprite.anchor.set(0.5);
         this.game.physics.arcade.enable(this.sprite);
-        this.sprite.body.gravity.y = 750;
+        this.sprite.body.gravity.y = this.gravity;
     }
 
     Player.prototype.jump = function () {

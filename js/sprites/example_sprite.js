@@ -22,7 +22,7 @@
     }
 
     /**
-     * @type Required
+     * @type Optional
      * @description Call it inside the preload method in your state
      */
     Example.prototype.preload = function () {

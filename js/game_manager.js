@@ -60,7 +60,7 @@ var gameManager = (function () {
             bindGameToSprites()
             addAllStatesToGame();
             getGameInstance().state.start(mainState);
-        }, 100);
+        }, 0);
         return this;
     }
     

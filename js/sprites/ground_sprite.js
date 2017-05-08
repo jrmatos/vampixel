@@ -1,17 +1,17 @@
 (function () {
     'use strict';
 
-    var BackgroundThree = function () {
+    var Ground = function () {
         this.sprite = null; 
-        this.imageName = 'backgroundthree_image';
-        this.imageUrl = 'assets/img/mountains-mid2.png';
+        this.imageName = 'ground_image';
+        this.imageUrl = 'assets/img/ground.png';
     }
 
-    BackgroundThree.prototype.preload = function () {
+    Ground.prototype.preload = function () {
         this.game.load.image(this.imageName, this.imageUrl);
     }
 
-    BackgroundThree.prototype.setup = function () {
+    Ground.prototype.setup = function () {
         this.sprite = this.game.add.tileSprite(
             0, 
             this.game.height - this.game.cache.getImage(this.imageName).height, 
@@ -21,6 +21,6 @@
         );
     }
 
-    gameManager.addSprite('backgroundThree', BackgroundThree);
+    gameManager.addSprite('ground', Ground);
 
 })();
