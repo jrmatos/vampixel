@@ -6,14 +6,14 @@
     var gameVelocity = 1;
 
     // sprites
-    var player = null;
-    var backgroundOne = null;
-    var backgroundTwo = null;
-    var backgroundThree = null;
-    var backgroundFour = null;
-    var ground = null;
-    var transparentGround = null;
-    var wallLeft = null;
+    var player              = null;
+    var backgroundOne       = null;
+    var backgroundTwo       = null;
+    var backgroundThree     = null;
+    var backgroundFour      = null;
+    var ground              = null;
+    var transparentGround   = null;
+    var wallLeft            = null;
 
     var GameState = function() {
         // load sprites here
