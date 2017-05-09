@@ -3,6 +3,7 @@
 
     // globals
     var bloodsVelociy = -200;
+    var obstaclesVelociy = -200;
     var gameVelocity = 1;
 
     var GameState = function() {
@@ -15,7 +16,6 @@
         this.ground              = gameManager.getSprite('ground');
         this.transparentGround   = gameManager.getSprite('transparentGround');
         this.wallLeft            = gameManager.getSprite('wallLeft');
-        this.obstacle            = gameManager.getSprite('obstacles');
     }
 
     GameState.prototype.preload = function() {
@@ -38,7 +38,7 @@
         this.game.load.audio('bloodSound', 'assets/audio/blood.ogg');
         
         // obstacles
-        this.obstacle.preload();
+        this.game.load.image('obstacle', 'assets/img/obstaculo.png');
         
     }
 
@@ -76,24 +76,19 @@
         // blood group
         this.bloods = this.game.add.group();
         this.bloods.enableBody = true;
-        
-        // generate blood every second
         this.game.time.events.loop(Phaser.Timer.SECOND, createBloods, this);
         
-        // handle all inputs
-        handleInputs.apply(this);        
-        
         // obstacles        
-        this.obstacles = this.add.group(); 
-        //var hole = Math.floor(Math.random() * 5) + 1;
-        var time = this.game.rnd.integerInRange(600, 2000)
-        this.game.time.events.loop(time, this.addRowOfObstacle, this);
-        
+        this.obstacles = this.game.add.group(); 
+        this.obstacles.enableBody = true;
+        this.game.time.events.loop(this.game.rnd.integerInRange(1500, 2000), createObstacles, this);
+
+        // handle all inputs
+        handleInputs.apply(this);
     }
 
     GameState.prototype.update = function() {
         updateParallaxes.apply(this);
-        updateBloods.apply(this);        
         handleColliders.apply(this);
     }    
     
@@ -104,25 +99,19 @@
     // collision checkers
     function handleColliders() {
         this.game.physics.arcade.collide(this.player.sprite, this.transparentGround.sprite, this.player.groundCollision, null, this.player);
-        this.game.physics.arcade.collide(this.bloods, this.wallLeft.sprite, bloodOutsideCollision, null, this);
         this.game.physics.arcade.overlap(this.player.sprite, this.bloods, this.player.bloodCollision, null, this);
         
-        // obstacles
-        this.game.physics.arcade.overlap(this.player.sprite, this.obstacles, this.platformCollision, null, this);
-
+        // obstacles collision
+        this.game.physics.arcade.overlap(this.player.sprite, this.obstacles, platformCollision, null, this);
     }
     
-    GameState.prototype.platformCollision = function(player, platform){
+    function platformCollision(player, platform){
         this.game.state.start("lose");
     }
 
-    // check this
-    function bloodOutsideCollision(wallLeft, blood) {
-        blood.kill();
-    }
-
     function handleInputs() {
-        this.game.input.onDown.add(this.player.jump, this.player); // mouse click or touch
+        // mouse click or touch
+        this.game.input.onDown.add(this.player.jump, this.player); 
     }
 
     function updateParallaxes() {
@@ -134,47 +123,20 @@
     }
 
     function createBloods() {
-        this.bloods.create(this.game.world.width + 10, this.game.rnd.integerInRange(135, 410), 'blood');
-        this.bloods.setAll('body.immovable', true);
+        var blood = this.bloods.create(this.game.world.width, this.game.rnd.integerInRange(135, 410), 'blood');
+        blood.body.velocity.x = bloodsVelociy; 
+        blood.body.immovable = true;
+        blood.checkWorldBounds = true;
+        blood.outOfBoundsKill = true;
     }
 
-    function updateBloods() {
-        this.bloods.children.forEach(function (blood) {
-            blood.body.velocity.x = bloodsVelociy;
-        });
-    }
-    
-    GameState.prototype.addObstacle = function(x, y) {
-        // Create a obstacle at the position x and y
-        var obstacle = this.game.add.sprite(x, y, 'obstacle');
-
-        // Add the obstacle to our previously created group
-        this.obstacles.add(obstacle);
-
-        // Enable physics on the obstacle 
-        this.game.physics.arcade.enable(obstacle);
-
-        // Add velocity to the obstacle to make it move left
-        obstacle.body.velocity.x = -200; 
-
-        // Automatically kill the obstacle when it's no longer visible 
+    function createObstacles() {
+        var obstacle = this.obstacles.create(this.game.world.width, 530, 'obstacle');
+        obstacle.scale.setTo(0.2, 0.2);
+        obstacle.body.velocity.x = obstaclesVelociy; 
+        obstacle.body.immovable = true;
         obstacle.checkWorldBounds = true;
         obstacle.outOfBoundsKill = true;
-    }
-    
-    GameState.prototype.addRowOfObstacle = function() {
-        
-        this.addObstacle(800, 550);  
-        
-        /*// Randomly pick a number between 1 and 5
-        // This will be the hole position
-        var hole = Math.floor(Math.random() * 5) + 1;
-
-        // Add the 6 obstacles 
-        // With one big hole at position 'hole' and 'hole + 1'
-        for (var i = 0; i < 8; i++)
-            if (i != hole && i != hole + 1) 
-                this.addObstacle(400, 550);   */
     }
 
     gameManager.addState('game', GameState);
