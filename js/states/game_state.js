@@ -106,6 +106,14 @@
         this.game.physics.arcade.collide(this.player.sprite, this.transparentGround.sprite, this.player.groundCollision, null, this.player);
         this.game.physics.arcade.collide(this.bloods, this.wallLeft.sprite, bloodOutsideCollision, null, this);
         this.game.physics.arcade.overlap(this.player.sprite, this.bloods, this.player.bloodCollision, null, this);
+        
+        // obstacles
+        this.game.physics.arcade.overlap(this.player.sprite, this.obstacles, this.platformCollision, null, this);
+
+    }
+    
+    GameState.prototype.platformCollision = function(player, platform){
+        this.game.state.start("lose");
     }
 
     // check this
