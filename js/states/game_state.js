@@ -15,6 +15,7 @@
         this.ground              = gameManager.getSprite('ground');
         this.transparentGround   = gameManager.getSprite('transparentGround');
         this.wallLeft            = gameManager.getSprite('wallLeft');
+        this.obstacle            = gameManager.getSprite('obstacles');
     }
 
     GameState.prototype.preload = function() {
@@ -35,6 +36,10 @@
         this.game.load.audio('jumpSound', 'assets/audio/jump.ogg');
         this.game.load.image('blood', 'assets/img/blood.png');
         this.game.load.audio('bloodSound', 'assets/audio/blood.ogg');
+        
+        // obstacles
+        this.obstacle.preload();
+        
     }
 
     GameState.prototype.create = function() {
@@ -77,6 +82,13 @@
         
         // handle all inputs
         handleInputs.apply(this);        
+        
+        // obstacles        
+        this.obstacles = this.add.group(); 
+        //var hole = Math.floor(Math.random() * 5) + 1;
+        var time = this.game.rnd.integerInRange(600, 2000)
+        this.game.time.events.loop(time, this.addRowOfObstacle, this);
+        
     }
 
     GameState.prototype.update = function() {
@@ -86,7 +98,7 @@
     }    
     
     GameState.prototype.render = function() {
-        // this.game.debug.inputInfo(32, 32);
+        this.game.debug.inputInfo(32, 32);
     }
 
     // collision checkers
@@ -122,6 +134,39 @@
         this.bloods.children.forEach(function (blood) {
             blood.body.velocity.x = bloodsVelociy;
         });
+    }
+    
+    GameState.prototype.addObstacle = function(x, y) {
+        // Create a obstacle at the position x and y
+        var obstacle = this.game.add.sprite(x, y, 'obstacle');
+
+        // Add the obstacle to our previously created group
+        this.obstacles.add(obstacle);
+
+        // Enable physics on the obstacle 
+        this.game.physics.arcade.enable(obstacle);
+
+        // Add velocity to the obstacle to make it move left
+        obstacle.body.velocity.x = -200; 
+
+        // Automatically kill the obstacle when it's no longer visible 
+        obstacle.checkWorldBounds = true;
+        obstacle.outOfBoundsKill = true;
+    }
+    
+    GameState.prototype.addRowOfObstacle = function() {
+        
+        this.addObstacle(800, 550);  
+        
+        /*// Randomly pick a number between 1 and 5
+        // This will be the hole position
+        var hole = Math.floor(Math.random() * 5) + 1;
+
+        // Add the 6 obstacles 
+        // With one big hole at position 'hole' and 'hole + 1'
+        for (var i = 0; i < 8; i++)
+            if (i != hole && i != hole + 1) 
+                this.addObstacle(400, 550);   */
     }
 
     gameManager.addState('game', GameState);
