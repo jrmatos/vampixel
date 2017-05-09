@@ -93,7 +93,7 @@
     }    
     
     GameState.prototype.render = function() {
-        this.game.debug.inputInfo(32, 32);
+        // this.game.debug.inputInfo(32, 32);
     }
 
     // collision checkers
