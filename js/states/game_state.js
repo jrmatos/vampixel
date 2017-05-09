@@ -1,3 +1,5 @@
+score = 0;
+
 (function () {
     'use strict'; 
 
@@ -5,6 +7,7 @@
     var bloodsVelociy = -200;
     var obstaclesVelociy = -200;
     var gameVelocity = 1;
+    var textScore;
 
     var GameState = function() {
         // load sprites here
@@ -82,7 +85,11 @@
         this.obstacles = this.game.add.group(); 
         this.obstacles.enableBody = true;
         this.game.time.events.loop(this.game.rnd.integerInRange(1500, 2000), createObstacles, this);
-
+        
+        // score
+        textScore = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 150, score, { fill: '#ffffff', align: 'center', fontSize: 50 });
+        textScore.anchor.set(0.5)
+        
         // handle all inputs
         handleInputs.apply(this);
     }
@@ -99,7 +106,11 @@
     // collision checkers
     function handleColliders() {
         this.game.physics.arcade.collide(this.player.sprite, this.transparentGround.sprite, this.player.groundCollision, null, this.player);
-        this.game.physics.arcade.overlap(this.player.sprite, this.bloods, this.player.bloodCollision, null, this);
+        
+        if (this.game.physics.arcade.overlap(this.player.sprite, this.bloods, this.player.bloodCollision, null, this)) {
+            score += 1; 
+            textScore.setText(score);
+        }
         
         // obstacles collision
         this.game.physics.arcade.overlap(this.player.sprite, this.obstacles, platformCollision, null, this);
