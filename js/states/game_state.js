@@ -19,6 +19,8 @@
         this.score = 0;
         this.highScore = 0;
         this.isGameover = false;
+        this.minBloodHeight = 135;
+        this.maxBloodHeight = 410;
     }
 
     GameState.prototype.preload = function() {
@@ -132,7 +134,7 @@
     }
 
     function createBloods() {
-        var blood = this.bloods.create(this.game.world.width, this.game.rnd.integerInRange(135, 410), 'blood');
+        var blood = this.bloods.create(this.game.world.width, this.game.rnd.integerInRange(this.minBloodHeight, this.maxBloodHeight), 'blood');
         blood.body.velocity.x = -(this.bloodsVelociy + this.gameSpeed); 
         blood.body.immovable = true;
         blood.checkWorldBounds = true;

@@ -57,10 +57,31 @@
 
     Player.prototype.bloodCollision = function (player, blood) {
         this.bloodSound.play();
-        blood.kill();
 
-        // score
-        this.scoreText.setText(++this.score);
+
+
+        // update score
+        this.score = this.score + calculatePoints.call(this, (blood.y));
+        this.scoreText.setText(this.score);
+
+        // destroy blood
+        blood.kill();
+    }
+
+    // give points based on the Y of blood
+    function calculatePoints(bloodY) {
+         if(bloodY <= 150) {
+            return 5;
+        }
+        if(bloodY <= 200) {
+            return 3;
+        }
+        if(bloodY <= 300) {
+            return 2;
+        }
+        if(bloodY <= 400) {
+            return 1;
+        }
     }
 
     gameManager.addSprite('player', Player);
