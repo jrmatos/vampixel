@@ -128,7 +128,7 @@
         this.backgroundTwo.sprite.tilePosition.x -= 0.60 + (this.gameSpeed / 30);
         this.backgroundThree.sprite.tilePosition.x -= 0.10 + (this.gameSpeed / 30);
         this.backgroundFour.sprite.tilePosition.x -= 0.05 + (this.gameSpeed / 30);
-        this.ground.sprite.tilePosition.x -= 3 + (this.gameSpeed / 30);
+        this.ground.sprite.tilePosition.x -= 2.7 + (this.gameSpeed / 30);
     }
 
     function createBloods() {
