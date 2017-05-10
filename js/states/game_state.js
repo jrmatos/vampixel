@@ -39,7 +39,7 @@
         this.game.load.audio('bloodSound', 'assets/audio/blood.ogg');
         
         // obstacles
-        this.game.load.image('obstacle', 'assets/img/obstaculo.png');
+        this.game.load.image('obstacle', 'assets/img/crucifixo.png');
         
     }
 
@@ -82,7 +82,7 @@
         // obstacles        
         this.obstacles = this.game.add.group(); 
         this.obstacles.enableBody = true;
-        this.game.time.events.loop(this.game.rnd.integerInRange(1500, 2000), createObstacles, this);
+        this.game.time.events.loop(this.game.rnd.integerInRange(2000, 2500), createObstacles, this);
         
         // score
         this.textScore = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 250, this.score, { fill: '#ffffff', align: 'center', fontSize: 50 });
@@ -139,8 +139,7 @@
     }
 
     function createObstacles() {
-        var obstacle = this.obstacles.create(this.game.world.width, 530, 'obstacle');
-        obstacle.scale.setTo(0.2, 0.2);
+        var obstacle = this.obstacles.create(this.game.world.width, 503, 'obstacle');
         obstacle.body.velocity.x = this.obstaclesVelociy; 
         obstacle.body.immovable = true;
         obstacle.checkWorldBounds = true;
