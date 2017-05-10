@@ -56,6 +56,9 @@
     Player.prototype.bloodCollision = function (player, blood) {
         this.bloodSound.play();
         blood.kill();
+
+        // score
+        this.textScore.setText(++this.score);
     }
 
     gameManager.addSprite('player', Player);

@@ -1,13 +1,5 @@
-score = 0;
-
 (function () {
     'use strict'; 
-
-    // globals
-    var bloodsVelociy = -200;
-    var obstaclesVelociy = -200;
-    var gameVelocity = 1;
-    var textScore;
 
     var GameState = function() {
         // load sprites here
@@ -19,6 +11,12 @@ score = 0;
         this.ground              = gameManager.getSprite('ground');
         this.transparentGround   = gameManager.getSprite('transparentGround');
         this.wallLeft            = gameManager.getSprite('wallLeft');
+
+        // globals
+        this.bloodsVelociy = -200;
+        this.obstaclesVelociy = -200;
+        this.gameVelocity = 1;
+        this.score = 0;
     }
 
     GameState.prototype.preload = function() {
@@ -87,8 +85,8 @@ score = 0;
         this.game.time.events.loop(this.game.rnd.integerInRange(1500, 2000), createObstacles, this);
         
         // score
-        textScore = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 150, score, { fill: '#ffffff', align: 'center', fontSize: 50 });
-        textScore.anchor.set(0.5)
+        this.textScore = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 250, this.score, { fill: '#ffffff', align: 'center', fontSize: 50 });
+        this.textScore.anchor.set(0.5)
         
         // handle all inputs
         handleInputs.apply(this);
@@ -105,13 +103,12 @@ score = 0;
 
     // collision checkers
     function handleColliders() {
+        // ground collision
         this.game.physics.arcade.collide(this.player.sprite, this.transparentGround.sprite, this.player.groundCollision, null, this.player);
         
-        if (this.game.physics.arcade.overlap(this.player.sprite, this.bloods, this.player.bloodCollision, null, this)) {
-            score += 1; 
-            textScore.setText(score);
-        }
-        
+        // bloods collision
+        this.game.physics.arcade.overlap(this.player.sprite, this.bloods, this.player.bloodCollision, null, this);
+            
         // obstacles collision
         this.game.physics.arcade.overlap(this.player.sprite, this.obstacles, platformCollision, null, this);
     }
@@ -135,7 +132,7 @@ score = 0;
 
     function createBloods() {
         var blood = this.bloods.create(this.game.world.width, this.game.rnd.integerInRange(135, 410), 'blood');
-        blood.body.velocity.x = bloodsVelociy; 
+        blood.body.velocity.x = this.bloodsVelociy; 
         blood.body.immovable = true;
         blood.checkWorldBounds = true;
         blood.outOfBoundsKill = true;
@@ -144,7 +141,7 @@ score = 0;
     function createObstacles() {
         var obstacle = this.obstacles.create(this.game.world.width, 530, 'obstacle');
         obstacle.scale.setTo(0.2, 0.2);
-        obstacle.body.velocity.x = obstaclesVelociy; 
+        obstacle.body.velocity.x = this.obstaclesVelociy; 
         obstacle.body.immovable = true;
         obstacle.checkWorldBounds = true;
         obstacle.outOfBoundsKill = true;
