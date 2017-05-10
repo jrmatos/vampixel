@@ -58,6 +58,12 @@
     Player.prototype.bloodCollision = function (player, blood) {
         this.bloodSound.play();
 
+        this.bloodParticleEmitter.setSize(1, 1);
+        this.bloodParticleEmitter.x = blood.x;
+        this.bloodParticleEmitter.y = blood.y;
+ 
+        this.bloodParticleEmitter.start(true, 500, null, 500);
+
         // calculate new score
         var newPoint = calculatePoints.call(this, (blood.y));
 

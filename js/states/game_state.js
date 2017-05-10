@@ -44,6 +44,9 @@
         
         // obstacles
         this.game.load.image('obstacle', 'assets/img/crucifixo.png');
+
+        // red square
+        this.game.load.image('redSquare', 'assets/img/red_square.png');
         
     }
 
@@ -94,14 +97,21 @@
 
         // increase game velocity
         this.game.time.events.loop(Phaser.Timer.SECOND, increasegameSpeed, this);
+
+        this.bloodParticleEmitter = this.game.add.emitter(0, 0, 100);
+        this.bloodParticleEmitter.makeParticles('redSquare');
         
         // handle all inputs
         handleInputs.apply(this);
+
+       
     }
 
     GameState.prototype.update = function() {
         updateParallaxes.apply(this);
         handleColliders.apply(this);
+
+       
     }    
     
     GameState.prototype.render = function() {
