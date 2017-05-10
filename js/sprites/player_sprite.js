@@ -15,7 +15,6 @@
     }
 
     Player.prototype.preload = function () {
-        // this.game.load.image(this.imageName, this.imageUrl);
         this.game.load.spritesheet(this.imageName, this.imageUrl, 48, 64);
     }
 
@@ -44,7 +43,6 @@
         }
 
         function doJump() {
-            // this.game.add.tween(this.sprite).to({ angle: 360 }, 750, Phaser.Easing.Exponential.Out).start();
             this.sprite.body.velocity.y = this.jumpVelocity || -450;
         }
     }
@@ -62,7 +60,7 @@
         blood.kill();
 
         // score
-        this.textScore.setText(++this.score);
+        this.scoreText.setText(++this.score);
     }
 
     gameManager.addSprite('player', Player);

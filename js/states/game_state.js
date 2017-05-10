@@ -13,10 +13,12 @@
         this.wallLeft            = gameManager.getSprite('wallLeft');
 
         // globals
-        this.bloodsVelociy = -200;
-        this.obstaclesVelociy = -200;
-        this.gameVelocity = 1;
+        this.bloodsVelociy = 200;
+        this.obstaclesVelociy = 200;
+        this.gameSpeed = 1;
         this.score = 0;
+        this.highScore = 0;
+        this.isGameover = false;
     }
 
     GameState.prototype.preload = function() {
@@ -85,8 +87,11 @@
         this.game.time.events.loop(this.game.rnd.integerInRange(2000, 2500), createObstacles, this);
         
         // score
-        this.textScore = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 250, this.score, { fill: '#ffffff', align: 'center', fontSize: 50 });
-        this.textScore.anchor.set(0.5)
+        this.scoreText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 250, this.score, { fill: '#ffffff', align: 'center', fontSize: 50 });
+        this.scoreText.anchor.set(0.5);
+
+        // increase game velocity
+        this.game.time.events.loop(Phaser.Timer.SECOND, increasegameSpeed, this);
         
         // handle all inputs
         handleInputs.apply(this);
@@ -110,11 +115,7 @@
         this.game.physics.arcade.overlap(this.player.sprite, this.bloods, this.player.bloodCollision, null, this);
             
         // obstacles collision
-        this.game.physics.arcade.overlap(this.player.sprite, this.obstacles, platformCollision, null, this);
-    }
-    
-    function platformCollision(player, platform){
-        this.game.state.start("lose");
+        this.game.physics.arcade.overlap(this.player.sprite, this.obstacles, gameover, null, this);
     }
 
     function handleInputs() {
@@ -123,16 +124,16 @@
     }
 
     function updateParallaxes() {
-        this.backgroundOne.sprite.tilePosition.x -= 0.85;
-        this.backgroundTwo.sprite.tilePosition.x -= 0.60;
-        this.backgroundThree.sprite.tilePosition.x -= 0.10;
-        this.backgroundFour.sprite.tilePosition.x -= 0.05;
-        this.ground.sprite.tilePosition.x -= 3;
+        this.backgroundOne.sprite.tilePosition.x -= 0.85 + (this.gameSpeed / 30);
+        this.backgroundTwo.sprite.tilePosition.x -= 0.60 + (this.gameSpeed / 30);
+        this.backgroundThree.sprite.tilePosition.x -= 0.10 + (this.gameSpeed / 30);
+        this.backgroundFour.sprite.tilePosition.x -= 0.05 + (this.gameSpeed / 30);
+        this.ground.sprite.tilePosition.x -= 3 + (this.gameSpeed / 30);
     }
 
     function createBloods() {
         var blood = this.bloods.create(this.game.world.width, this.game.rnd.integerInRange(135, 410), 'blood');
-        blood.body.velocity.x = this.bloodsVelociy; 
+        blood.body.velocity.x = -(this.bloodsVelociy + this.gameSpeed); 
         blood.body.immovable = true;
         blood.checkWorldBounds = true;
         blood.outOfBoundsKill = true;
@@ -140,10 +141,42 @@
 
     function createObstacles() {
         var obstacle = this.obstacles.create(this.game.world.width, 503, 'obstacle');
-        obstacle.body.velocity.x = this.obstaclesVelociy; 
+        obstacle.body.velocity.x = -(this.obstaclesVelociy + this.gameSpeed); 
         obstacle.body.immovable = true;
         obstacle.checkWorldBounds = true;
         obstacle.outOfBoundsKill = true;
+    }
+
+    function increasegameSpeed() {
+        this.gameSpeed += 5;
+    }
+
+    function gameover() {
+        var self = this;
+        this.player.sprite.kill();
+        this.isGameover = true;
+        this.gameSpeed = 1;
+
+        // update high score
+        this.highScore = (this.score > this.highScore) ? this.score : this.highScore;
+
+        // erase score text from screen
+        this.scoreText.kill();
+
+        // display the score and high score to the player
+        this.gameoverText = this.game.add.text(this.game.world.centerX, 200, "GAME OVER", { fill: '#ffffff', align: 'center', fontSize: 50 });
+        this.scoreText = this.game.add.text(this.game.world.centerX, 240, "Score: " + this.score, { fill: '#ffffff', align: 'center', fontSize: 25 });
+        this.highScoreText = this.game.add.text(this.game.world.centerX, 265, "High Score: " + this.highScore, { fill: '#ffffff', align: 'center', fontSize: 25 });
+        this.gameoverText.anchor.set(0.5);
+        this.scoreText.anchor.set(0.5);
+        this.highScoreText.anchor.set(0.5);
+
+        // reset score
+        this.score = 0;
+
+        setTimeout(function () {
+            self.game.state.start(self.game.state.current,true,false);
+        }, 3000);
     }
 
     gameManager.addState('game', GameState);
