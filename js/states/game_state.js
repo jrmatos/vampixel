@@ -21,6 +21,7 @@
         this.isGameover = false;
         this.minBloodHeight = 135;
         this.maxBloodHeight = 410;
+        this.increaseGameSpeedRate = 5;
     }
 
     GameState.prototype.preload = function() {
@@ -106,7 +107,7 @@
         this.scoreText.anchor.set(0.5);
 
         // increase game velocity
-        this.game.time.events.loop(Phaser.Timer.SECOND, increasegameSpeed, this);
+        this.game.time.events.loop(Phaser.Timer.SECOND, increaseGameSpeed, this);
 
         this.bloodParticleEmitter = this.game.add.emitter(0, 0, 100);
         this.bloodParticleEmitter.makeParticles('redSquare');
@@ -170,8 +171,8 @@
         obstacle.outOfBoundsKill = true;
     }
 
-    function increasegameSpeed() {
-        this.gameSpeed += 5;
+    function increaseGameSpeed() {
+        this.gameSpeed += this.increaseGameSpeedRate;
     }
 
     function gameover() {     

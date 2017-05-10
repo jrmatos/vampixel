@@ -31,8 +31,6 @@
 
     Player.prototype.jump = function () {
 
-        console.log(arguments)
-
         if(this.sprite.body.touching.down) {
             this.isJumping = true;
             return doJump.apply(this);
