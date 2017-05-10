@@ -18,7 +18,7 @@
         this.game.load.spritesheet(this.imageName, this.imageUrl, 48, 64);
     }
 
-    Player.prototype.setup = function () {   
+    Player.prototype.setup = function (stateContext) {   
         this.sprite = this.game.add.sprite(this.initialPositionX, this.initialPositionY, this.imageName);   
         this.sprite.frame = 0;
         this.sprite.animations.add('walk', [0, 1, 2, 3], 10, true);
@@ -26,9 +26,13 @@
         this.sprite.anchor.set(0.5);
         this.game.physics.arcade.enable(this.sprite);
         this.sprite.body.gravity.y = this.gravity;
+        this.stateContext = stateContext;
     }
 
     Player.prototype.jump = function () {
+
+        console.log(arguments)
+
         if(this.sprite.body.touching.down) {
             this.isJumping = true;
             return doJump.apply(this);
@@ -44,7 +48,7 @@
 
         function doJump() {
             this.sprite.body.velocity.y = this.jumpVelocity || -450;
-            this.jumpSound.play();
+            this.stateContext.jumpSound.play();
         }
     }
 

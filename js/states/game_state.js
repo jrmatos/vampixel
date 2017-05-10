@@ -89,7 +89,7 @@
         this.wallLeft.setup('wall');
 
         // setup initial player properties
-        this.player.setup();
+        this.player.setup(this);
 
         // blood group
         this.bloods = this.game.add.group();
