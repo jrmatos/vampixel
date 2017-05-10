@@ -44,6 +44,7 @@
 
         function doJump() {
             this.sprite.body.velocity.y = this.jumpVelocity || -450;
+            this.jumpSound.play();
         }
     }
 

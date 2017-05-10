@@ -7,13 +7,13 @@
     MenuState.prototype.preload = function() {
         this.onMenu = true;
         this.game.load.image('start', 'assets/img/start1.png');
-        // this.game.load.audio('environment', 'assets/audio/environment.wav');
+        this.game.load.audio('environment', 'assets/audio/environment.ogg');
+        this.game.load.audio('clickSound', 'assets/audio/click1.wav');
     }   
     
     MenuState.prototype.create = function() {
         
-        // this.environmentSound = this.game.add.audio('environment');
-        // this.environmentSound.play();
+        this.clickSound = this.game.add.audio('clickSound');
         
         this.onMenu = true;
         
@@ -24,8 +24,8 @@
         button.anchor.set(0.5);
 
         function clicked() {
-            // this.environmentSound.pause();
             this.game.state.start('game');
+            this.clickSound.play();
         }  
     }
     

@@ -37,13 +37,16 @@
         // wall horizontal
         this.game.load.image('wall', 'assets/img/wallHorizontal.png');
 
+        // sound jump
+        this.game.load.audio('jumpSound', 'assets/audio/jump2.ogg');
+        
         // blood
-        this.game.load.audio('jumpSound', 'assets/audio/jump.ogg');
         this.game.load.image('blood', 'assets/img/blood.png');
-        this.game.load.audio('bloodSound', 'assets/audio/blood.ogg');
+        this.game.load.audio('bloodSound', 'assets/audio/sipBlood.ogg');
         
         // obstacles
         this.game.load.image('obstacle', 'assets/img/crucifixo.png');
+        this.game.load.audio('obstacleSound', 'assets/audio/impactocrucifixo.wav');
 
         // red square
         this.game.load.image('redSquare', 'assets/img/red_square.png');
@@ -52,10 +55,17 @@
 
     GameState.prototype.create = function() {
 
-        // sound
-        this.game.sound.stopAll();
+        // Sounds
+        // environment 
+        this.environmentSound = this.game.add.audio('environment');
+        this.environmentSound.loop = true;
+        this.environmentSound.play();
+        
+        // this.game.sound.stopAll();
+        //Setando os áudios de Jump, Coletar Sangue e ImpactoCrucifixo
         this.jumpSound = this.game.add.audio('jumpSound');
         this.bloodSound = this.game.add.audio('bloodSound');
+        this.obstacleSound = this.game.add.audio('obstacleSound');
 
         // activate physics system
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -103,7 +113,6 @@
         
         // handle all inputs
         handleInputs.apply(this);
-
        
     }
 
@@ -111,7 +120,6 @@
         updateParallaxes.apply(this);
         handleColliders.apply(this);
 
-       
     }    
     
     GameState.prototype.render = function() {
@@ -127,7 +135,10 @@
         this.game.physics.arcade.overlap(this.player.sprite, this.bloods, this.player.bloodCollision, null, this);
             
         // obstacles collision
-        this.game.physics.arcade.overlap(this.player.sprite, this.obstacles, gameover, null, this);
+        if (this.game.physics.arcade.overlap(this.player.sprite, this.obstacles, gameover, null, this)){
+            this.obstacleSound.play();
+        }
+        
     }
 
     function handleInputs() {
@@ -163,7 +174,7 @@
         this.gameSpeed += 5;
     }
 
-    function gameover() {
+    function gameover() {     
         var self = this;
         this.player.sprite.kill();
         this.isGameover = true;
@@ -185,7 +196,7 @@
 
         // reset score
         this.score = 0;
-
+        
         setTimeout(function () {
             self.game.state.start(self.game.state.current,true,false);
         }, 3000);
