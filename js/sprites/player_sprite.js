@@ -58,10 +58,14 @@
     Player.prototype.bloodCollision = function (player, blood) {
         this.bloodSound.play();
 
+        // calculate new score
+        var newPoint = calculatePoints.call(this, (blood.y));
 
+        // display to the player
+        displayNewPoint.call(this, newPoint, blood.x, blood.y)
 
         // update score
-        this.score = this.score + calculatePoints.call(this, (blood.y));
+        this.score = this.score + newPoint;
         this.scoreText.setText(this.score);
 
         // destroy blood
@@ -79,9 +83,17 @@
         if(bloodY <= 300) {
             return 2;
         }
-        if(bloodY <= 400) {
-            return 1;
-        }
+        return 1;
+    }
+
+    function displayNewPoint(newPoint, x, y) {
+        var newPointText = this.game.add.text(x, y, '+' + newPoint, { fill: '#ffffff', align: 'center', fontSize: 15 });
+        newPointText.anchor.set(0.5);
+
+        this.game.add.tween(newPointText).to({ y: newPointText.y - 50, alpha: 0 }, 500, "Linear", true);
+        setTimeout(function () {
+            newPointText.kill();
+        }, 500)
     }
 
     gameManager.addSprite('player', Player);
