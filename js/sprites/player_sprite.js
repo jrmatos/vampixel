@@ -3,7 +3,7 @@
 
     var Player = function () {
         this.imageName = 'player_image';
-        this.imageUrl = 'assets/img/walk-idle-transform.png';
+        this.imageUrl = 'assets/img/walk-idle-transform-BAT.png';
         this.sprite = null;
         this.gravity = 750;
         this.jumpVelocity = -450;
@@ -21,8 +21,9 @@
     Player.prototype.setup = function (stateContext) {   
         this.sprite = this.game.add.sprite(this.initialPositionX, this.initialPositionY, this.imageName);   
         this.sprite.frame = 0;
-        this.sprite.animations.add('walk', [0, 1, 2, 3], 10, true);
-        this.sprite.animations.add('transform', [7,8,9], 10, true);
+        this.sprite.animations.add('walk', [0, 1, 2, 3], 22, true);
+        this.sprite.animations.add('transform', [7,8,9], 22, true);
+        this.sprite.animations.add('batGirl', [10,11,12,13,14,15,16,17,18,19], 22, true);
         this.sprite.animations.play('walk');
         this.sprite.anchor.set(0.5);
         this.game.physics.arcade.enable(this.sprite);
@@ -35,15 +36,16 @@
         if(!this.stateContext.isGameover) {
             if(this.sprite.body.touching.down) {
                 this.isJumping = true;
-                this.sprite.animations.play('transform');
                 return doJump.apply(this);
             }
             else if(!this.isDoubleJumping) {
                 this.isDoubleJumping = true;
+                this.sprite.animations.play('transform');
                 return doJump.apply(this);
             }
             else if(!this.isTripleJumping) {
                 this.isTripleJumping = true;
+                this.sprite.animations.play('batGirl');
                 return doJump.apply(this);
             }
         }
