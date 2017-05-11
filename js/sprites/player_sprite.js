@@ -22,6 +22,7 @@
         this.sprite = this.game.add.sprite(this.initialPositionX, this.initialPositionY, this.imageName);   
         this.sprite.frame = 0;
         this.sprite.animations.add('walk', [0, 1, 2, 3], 10, true);
+        this.sprite.animations.add('transform', [7,8,9], 10, true);
         this.sprite.animations.play('walk');
         this.sprite.anchor.set(0.5);
         this.game.physics.arcade.enable(this.sprite);
@@ -34,6 +35,7 @@
         if(!this.stateContext.isGameover) {
             if(this.sprite.body.touching.down) {
                 this.isJumping = true;
+                this.sprite.animations.play('transform');
                 return doJump.apply(this);
             }
             else if(!this.isDoubleJumping) {
@@ -57,6 +59,7 @@
             this.isJumping = false;
             this.isDoubleJumping = false;
             this.isTripleJumping = false;
+            playerSprite.animations.play('walk');
         }
     }
 
