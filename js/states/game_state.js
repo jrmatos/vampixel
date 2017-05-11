@@ -198,7 +198,9 @@
         // reset score
         this.score = 0;
         
+        // restart after 3 seconds
         setTimeout(function () {
+            self.isGameover = false;
             self.game.state.start(self.game.state.current,true,false);
         }, 3000);
     }

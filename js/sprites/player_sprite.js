@@ -31,17 +31,19 @@
 
     Player.prototype.jump = function () {
 
-        if(this.sprite.body.touching.down) {
-            this.isJumping = true;
-            return doJump.apply(this);
-        }
-        else if(!this.isDoubleJumping) {
-            this.isDoubleJumping = true;
-            return doJump.apply(this);
-        }
-        else if(!this.isTripleJumping) {
-            this.isTripleJumping = true;
-            return doJump.apply(this);
+        if(!this.stateContext.isGameover) {
+            if(this.sprite.body.touching.down) {
+                this.isJumping = true;
+                return doJump.apply(this);
+            }
+            else if(!this.isDoubleJumping) {
+                this.isDoubleJumping = true;
+                return doJump.apply(this);
+            }
+            else if(!this.isTripleJumping) {
+                this.isTripleJumping = true;
+                return doJump.apply(this);
+            }
         }
 
         function doJump() {

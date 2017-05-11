@@ -7,7 +7,7 @@
     MenuState.prototype.preload = function() {
         this.onMenu = true;
         this.game.load.image('start', 'assets/img/start1.png');
-        //this.game.load.audio('environment', 'assets/audio/environment.ogg');
+        this.game.load.audio('environment', 'assets/audio/environment.ogg');
         this.game.load.audio('clickSound', 'assets/audio/click.ogg');
     }   
     
