@@ -41,6 +41,8 @@
         // sound jump
         this.game.load.audio('jumpSound', 'assets/audio/jump2.ogg');
         
+        this.game.load.audio('environment', 'assets/audio/environment.ogg');
+        
         // blood
         this.game.load.image('blood', 'assets/img/blood.png');
         this.game.load.audio('bloodSound', 'assets/audio/sipBlood.ogg');
