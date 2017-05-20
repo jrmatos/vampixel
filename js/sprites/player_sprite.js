@@ -9,7 +9,6 @@
         this.jumpVelocity = -450;
         this.isJumping = false;
         this.isDoubleJumping = false;
-        this.isTripleJumping = false;
         this.initialPositionX = 100;
         this.initialPositionY = this.game.height - 65;
     }
@@ -40,11 +39,6 @@
             }
             else if(!this.isDoubleJumping) {
                 this.isDoubleJumping = true;
-                this.sprite.animations.play('transform');
-                return doJump.apply(this);
-            }
-            else if(!this.isTripleJumping) {
-                this.isTripleJumping = true;
                 this.sprite.animations.play('batGirl');
                 return doJump.apply(this);
             }
@@ -60,7 +54,6 @@
         if(this.isJumping) {
             this.isJumping = false;
             this.isDoubleJumping = false;
-            this.isTripleJumping = false;
             playerSprite.animations.play('walk');
         }
     }
