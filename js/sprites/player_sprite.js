@@ -3,7 +3,7 @@
 
     var Player = function () {
         this.imageName = 'player_image';
-        this.imageUrl = 'assets/img/walk-idle-transform.png';
+        this.imageUrl = 'assets/spriteSheet/walk-idle-transform.png';
         this.sprite = null;
         this.gravity = 750;
         this.jumpVelocity = -450;

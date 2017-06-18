@@ -39,17 +39,17 @@
         this.game.load.image('wall', 'assets/img/wallHorizontal.png');
 
         // sound jump
-        this.game.load.audio('jumpSound', 'assets/audio/jump2.ogg');
+        this.game.load.audio('jumpSound', 'assets/sounds/jump.ogg');
         
-        this.game.load.audio('environment', 'assets/audio/environment.ogg');
+        this.game.load.audio('environment', 'assets/sounds/environment.ogg');
         
         // blood
         this.game.load.image('blood', 'assets/img/blood.png');
-        this.game.load.audio('bloodSound', 'assets/audio/sipBlood.ogg');
+        this.game.load.audio('bloodSound', 'assets/sounds/sipBlood.ogg');
         
         // obstacles
         this.game.load.image('obstacle', 'assets/img/crucifixo.png');
-        this.game.load.audio('obstacleSound', 'assets/audio/impactocrucifixo.wav');
+        this.game.load.audio('obstacleSound', 'assets/sounds/impactocrucifixo.ogg');
 
         // red square
         this.game.load.image('redSquare', 'assets/img/red_square.png');
@@ -60,12 +60,11 @@
 
         // Sounds
         // environment 
-        this.environmentSound = this.game.add.audio('environment');
-        this.environmentSound.loop = true;
-        this.environmentSound.play();
+        this.environmentGame = this.game.add.audio('environment');
+        this.environmentGame.loop = true;
+        this.environmentGame.play();
         
-        // this.game.sound.stopAll();
-        //Setando os áudios de Jump, Coletar Sangue e ImpactoCrucifixo
+        //Jump, Coletar Sangue e ImpactoCrucifixo
         this.jumpSound = this.game.add.audio('jumpSound');
         this.bloodSound = this.game.add.audio('bloodSound');
         this.obstacleSound = this.game.add.audio('obstacleSound');
@@ -103,16 +102,16 @@
         this.obstacles = this.game.add.group(); 
         this.obstacles.enableBody = true;
         this.game.time.events.loop(this.game.rnd.integerInRange(2000, 2500), createObstacles, this);
-        
-        // score
-        this.scoreText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 250, this.score, { fill: '#ffffff', align: 'center', fontSize: 50 });
-        this.scoreText.anchor.set(0.5);
 
         // increase game velocity
         this.game.time.events.loop(Phaser.Timer.SECOND, increaseGameSpeed, this);
 
         this.bloodParticleEmitter = this.game.add.emitter(0, 0, 100);
         this.bloodParticleEmitter.makeParticles('redSquare');
+        
+         // score
+        this.scoreText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 250, this.score, { fill: '#ffffff', align: 'center', fontSize: 50 });
+        this.scoreText.anchor.set(0.5);
         
         // handle all inputs
         handleInputs.apply(this);
@@ -125,10 +124,6 @@
 
     }    
     
-    GameState.prototype.render = function() {
-        // this.game.debug.inputInfo(32, 32);
-    }
-
     // collision checkers
     function handleColliders() {
         // ground collision
