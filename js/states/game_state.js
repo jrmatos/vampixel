@@ -19,7 +19,7 @@
         this.score = 0;
         this.highScore = 0;
         this.isGameover = false;
-        this.minBloodHeight = 135;
+        this.minBloodHeight = 200;
         this.maxBloodHeight = 410;
         this.increaseGameSpeedRate = 5;
     }
@@ -195,7 +195,9 @@
         // reset score
         this.score = 0;
         
+        // restart after 3 seconds
         setTimeout(function () {
+            self.isGameover = false;
             self.game.state.start(self.game.state.current,true,false);
         }, 3000);
     }
